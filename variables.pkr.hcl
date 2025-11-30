@@ -28,6 +28,11 @@ variable "image_name" {
   type = string
 }
 
+variable "image_format" {
+  type = string
+}
+
+
 variable "output_directory" {
   type = string
 }

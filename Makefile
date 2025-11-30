@@ -1,6 +1,10 @@
 PACKER ?= packer
 TEMPLATE ?= .
 OUTDIR = build
+IMAGENAME = debian-custom-trixie
+IMAGEFORMAT = qcow2
+BUILDFLAGS = -var output_directory=$(OUTDIR) -var image_name=$(IMAGENAME) -var image_format=$(IMAGEFORMAT)
+IMAGEPATH = $(OUTDIR)/$(IMAGENAME).$(IMAGEFORMAT)
 
 .PHONY: help init fmt validate build clean docker qemu
 
@@ -11,6 +15,7 @@ help:
 	@echo "  make validate              - packer validate TEMPLATE (default: .)"
 	@echo "  make build                 - packer build TEMPLATE (default: .)"
 	@echo "  make build-kvm             - packer build TEMPLATE (default: .) with kvm accelerator"
+	@echo "  make check                 - check generated image"
 	@echo "  make clean                 - remove output directory"
 	@echo
 	@echo "Vars:"
@@ -26,10 +31,15 @@ validate: init fmt clean
 	$(PACKER) validate $(TEMPLATE)
 
 build: validate
-	$(PACKER) build $(TEMPLATE)
+	$(PACKER) build $(BUILDFLAGS) $(TEMPLATE)
+	qemu-img check $(IMAGEPATH)
 
 build-kvm: validate
-	$(PACKER) build -var accelerator=kvm $(TEMPLATE)
+	$(PACKER) build $(BUILDFLAGS) -var accelerator=kvm $(TEMPLATE)
+	qemu-img check $(IMAGEPATH)
+
+check:
+	qemu-img check $(IMAGEPATH)
 
 clean:
 	rm -rf $(OUTDIR)/

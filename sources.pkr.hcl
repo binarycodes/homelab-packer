@@ -4,7 +4,7 @@ source "qemu" "debian-cloud" {
   iso_checksum     = var.debian_cloud_image_checksum
   use_backing_file = false
 
-  format      = "qcow2"
+  format      = var.image_format
   disk_size   = "5G"
   accelerator = var.accelerator
   headless    = true

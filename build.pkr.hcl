@@ -47,8 +47,8 @@ build {
   post-processor "shell-local" {
     inline = [
       "set -eux",
-      "mv ${var.output_directory}/packer-debian-cloud ${var.output_directory}/${var.image_name}.qcow2",
-      "qemu-img info ${var.output_directory}/${var.image_name}.qcow2",
+      "mv ${var.output_directory}/packer-debian-cloud ${local.image_path}",
+      "qemu-img info ${local.image_path}",
     ]
   }
 }

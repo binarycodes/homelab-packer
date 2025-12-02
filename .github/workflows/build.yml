@@ -1,0 +1,25 @@
+name: Runner Sanity Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-runner:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: Show runner info
+        run: |
+          echo "Runner hostname: $(hostname)"
+          echo "Runner labels: $RUNNER_LABELS"
+          echo "Current user: $(whoami)"
+          echo "OS: $(uname -a)"
+
+      - name: Check tools
+        run: |
+          git --version
+          jq --version
+          echo "All good."
+
+      - name: Echo success
+        run: echo "🎉 Runner test completed successfully!"
